@@ -8,8 +8,7 @@ let staticDir = process.argv.slice(2)[0] || __dirname
 
 // 创建服务器
 http.createServer((req,res)=>{
-	// 书写响应头信息,声明返回的是html
-	res.writeHead(200,{'content-type':'text/html;charset=utf8'})
+	
 	//	使用querstring解析路由传入的中文字符
 	let urlParse = Object.keys(querystring.parse(req.url))[0]
 	// 组合目录文件夹
@@ -23,16 +22,19 @@ http.createServer((req,res)=>{
 		return
 	}
 
-	let dirArr
 	// 如果路径是文件夹则读取文件夹内容
 	if(fs.statSync(rootName).isDirectory()){
-		dirArr = openDir(rootName).join('')
+		// 书写响应头信息,声明返回的是html
+		res.writeHead(200,{'content-type':'text/html;charset=utf8'})
+		let dirArr = openDir(rootName).join('')
 		res.write(dirArr)
 		res.end()
 		return 
 	}
 	// 如果是文件则,直接返回文件
 	if(fs.statSync(rootName).isFile()){
+		let type = path.extname(rootName)
+		res.writeHead(200,{'content-type':`${mime(type)}`})
 		fs.createReadStream(rootName).pipe(res)
 		return
 	}
@@ -63,4 +65,28 @@ function openDir(path){
 	newArr.unshift(`<li><a href="../">../</a></li>`)
 	//	返回数组
 	return newArr
+}
+
+function mime(type){
+	let obj = {
+		'.jpg':'image/jpeg',
+		'.jpeg':'image/jpeg',
+		'.gif':'image/gif',
+		'.ico':'image/x-icon',
+		'.ico':'image/x-icon',
+		'.pdf':'application/pdf',
+		'.css':'text/css',
+		'.doc':'application/msword',
+		'.doc':'application/msword',
+		'.html':'text/html',
+		'.htm':'text/html',
+		'.js':'application/x-javascript',
+		'.png':'image/png'
+	}
+
+	if(!obj[type]){
+		return 'text/plain'
+	}
+
+	return obj[type]
 }
