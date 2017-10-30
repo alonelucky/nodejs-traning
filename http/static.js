@@ -45,17 +45,22 @@ http.createServer((req,res)=>{
 
 // 读取文件夹内容,返回HTML列表
 function openDir(path){
+	//	 创建数组,用于保存组合的文件夹路径列表
 	let newArr = []
+	// 得到文件夹下的内容
 	let arr = fs.readdirSync(path)
+	// 如果文件夹下没有内容,则如下处理,并返回
 	if(!arr.length){
 		newArr[0]=`<li>当前文件夹下为空</li>`
 		newArr.unshift(`<li><a href="../">../</a></li>`)
 		return newArr
 	}
-
+	// 	如果文件夹下有内容,则循环将内容放入新数组中
 	for (let i=0;i<arr.length;i++){
 		newArr.push(`<li><a href="${arr[i]}/">${arr[i]}</a></li>`)
 	}
+	//	增加上一层返回链接
 	newArr.unshift(`<li><a href="../">../</a></li>`)
+	//	返回数组
 	return newArr
 }
