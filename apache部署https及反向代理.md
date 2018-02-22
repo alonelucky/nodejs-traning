@@ -83,3 +83,69 @@
 ## 4. 部署反向代理站点ssl
 
 基本同 ___2 部署普通站点ssl ___
+
+## 5. 简单优化
+
+conf/extra/httpd-default.conf
+
+	Timeout 15
+	# 超时设置 15秒
+	KeepAlive On
+	# 开启keepalive,保持活跃链接
+	MaxKeepAliveRequests 50
+	# 设置最大活跃链接请求数
+	KeepAliveTimeout 5
+	# 活跃链接超时时间 5秒
+
+开启缓存模块
+
+	LoadModule cache_module modules/mod_cache.so
+	# 基于URI键的内容动态缓冲
+	LoadModule cache_disk_module modules/mod_cache_disk.so
+	# 基于磁盘的缓冲管理器
+	LoadModule deflate_module modules/mod_deflate.so
+	# 压缩发送给客户端的内容
+	LoadModule socache_memcache_module modules/mod_socache_memcache.so  
+	# 基于内存的缓冲管理器
+	LoadModule file_cache_module modules/mod_file_cache.so
+	# 提供文件描述符缓存支持，从而提高Apache性能
+	LoadModule filter_module modules/mod_filter.so 
+	# 过滤模块，使用缓存必须启用过滤模块
+
+配置MPM
+	
+	<IfModule mpm_winnt_module>
+        ThreadsPerChild     150  # 每个进程子进程数
+        MaxRequestsPerChild 0 # 每个子进程处理多少请求后终止,0自动处理
+    </IfModule>
+
+开启gzip+静态资源缓存
+
+	LoadModule expires_module modules/mod_expires.so
+
+配置
+
+	<IfModule expires_module>
+	    #打开缓存
+	    ExpiresActive On 
+	
+	    #css文件缓存7200000/3600/24=83天
+	    ExpiresByType text/css A7200000
+	
+	    #js文件缓存83天
+	    ExpiresByType application/x-javascript A7200000
+	
+	    #html文件缓存83天
+	    ExpiresByType text/html A7200000
+	
+	    #图片文件缓存83天
+	    ExpiresByType image/jpeg A7200000
+
+		# 对应后缀文件缓存 1 小时
+		<FilesMatch "\.(jpg|png|gif|jprg|css|js)">
+			ExpiresDefault A3600
+		</FilesMatch>
+	
+	</IfModule>
+
+
