@@ -103,8 +103,6 @@ conf/extra/httpd-default.conf
 	# 基于URI键的内容动态缓冲
 	LoadModule cache_disk_module modules/mod_cache_disk.so
 	# 基于磁盘的缓冲管理器
-	LoadModule deflate_module modules/mod_deflate.so
-	# 压缩发送给客户端的内容
 	LoadModule socache_memcache_module modules/mod_socache_memcache.so  
 	# 基于内存的缓冲管理器
 	LoadModule file_cache_module modules/mod_file_cache.so
@@ -121,9 +119,21 @@ conf/extra/httpd-default.conf
 
 开启gzip+静态资源缓存
 
+	LoadModule deflate_module modules/mod_deflate.so
+	# 压缩
 	LoadModule expires_module modules/mod_expires.so
+	# 缓存
 
 配置
+
+	<IfModule mod_deflate>
+		SetOutputFilter DEFLATE
+		# 设置过滤模块
+		DeflateCompressionLevel 4
+		# 设置压缩等级 1-9 越大压缩率越高同样也越消耗CPU,一般在5左右即可
+		SetEnvIfNoCase request_URI .(?:jpg|png|gif)$ no-gzip dont-vary
+		# 设置不需要压缩的请求/文件(图片等二进制文件一般不压缩)
+	</IfModule>
 
 	<IfModule expires_module>
 	    #打开缓存
