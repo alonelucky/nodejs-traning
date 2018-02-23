@@ -86,6 +86,12 @@
 
 ## 5. 简单优化
 
+优化响应时间过长,去除响应过滤
+
+	AcceptFilter http none
+	AcceptFilter https none
+
+
 conf/extra/httpd-default.conf
 
 	Timeout 15
