@@ -1,17 +1,19 @@
-# Sinopia 搭建npm私有仓库
+# Verdaccio 搭建npm私有仓库
+
+由于sinopia项目不再维护,故选取分支项目verdaccio进行搭建,使用方法一样,仅仅将sinopia换为verdaccio
 
 环境依赖
 
 	python 2.7.x
 	node-gyp
 
-### 1. 安装sinopia
+### 1. 安装verdaccio
 
 ```
-npm i -g sinopia
+npm i -g verdaccio
 ```
 
-配置文件 ~/.config/sinopia.yaml
+配置文件 ~/.config/verdaccio/config.yaml
 
 	# 存放位置
 	storage: ./npmdata
@@ -47,21 +49,21 @@ npm i -g sinopia
 
 1. 默认启动
 ```
-sinopia
-# 默认加载 ~/.config/sinopia/config.yaml
+verdaccio
+# 默认加载 ~/.config/verdaccio/config.yaml
 # 默认监听
-# 默认存储位置 ~/.config/sinopia/storage/
-# 默认账号密码存放位置 ~/.config/sinopia/htpasswd
+# 默认存储位置 ~/.config/verdaccio/storage/
+# 默认账号密码存放位置 ~/.config/verdaccio/htpasswd
 ```
 2. 终端命令启动
 
 ```
-sinopia -l 端口 -c 配置文件位置
+verdaccio -l 端口 -c 配置文件位置
 ```
 
 3. pm2进程守护
 ```
-pm2 start `which sinopia` --name "local_npm"
+pm2 start `which verdaccio` --name "local_npm"
 ```
 
 ### 3. 项目使用
