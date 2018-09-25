@@ -11,3 +11,12 @@ dns.resolve('domain.com','MX',(err, data) => {
     console.log(data);
 })
 ```
+或者函数
+```
+dns.resolveMx('domain.com',(err, data) => {
+    // 不存在则返回错误信息
+    console.log(err);
+    // 存在则返回dns记录
+    console.log(data);
+})
+```
