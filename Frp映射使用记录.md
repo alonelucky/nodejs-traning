@@ -41,10 +41,13 @@ server_post = 9898
 # 类型是http
 type = http
 # 域名(可以写为ip,访问时输入的ip)
-custom_domains = 127.0.0.1
+custom_domains = frptest.com  # 绑定服务器ip的域名
+# custom_domains = localhost # 此处指服务器端访问的localhost
 # 需要映射的本地端口
 local_port = 80
-
 ```
+访问 `frptest.com:8080` 或是 
+服务器端反向代理 `localhost:8080`
+
 
 
